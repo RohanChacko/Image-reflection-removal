@@ -98,10 +98,11 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
   est_t = im2patches(I_t_i, psize);
   est_r = im2patches(I_r_i, psize);
 
-  niter = 25;
+  niter = 5;
   beta  = configs.beta_i;
 
   for i = 1 : niter
+    disp(i);  
     fprintf('Optimizine %d iter...\n', i);
     % Merge the patches with bounded least squares
     f_handle = @(x)(lambda * A'*(A*x) + beta*(mask.*x));
