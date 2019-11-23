@@ -5,10 +5,10 @@ addpath('epllcode');
 % Dependency on bounded-LBFGS Optimization package
 addpath('lbfgsb/lbfgsb3.0_mex1.2');   
 
-  if strcmp(test_case, 'apples')
+  if strcmp(test_case, 'waterfall')
     % Read the input image from the linearized raw file.
     % apples.mat contains I_in. We will write it out to [0-255] for visualization.
-    load('apples.mat');
+    load('waterfall.mat');
     % Estimate ghosting kernel, including spatial shift configs.dx, dy 
     % and the attenuation factor configs.c.
     [configs.dx configs.dy configs.c] = kernel_est(I_in);

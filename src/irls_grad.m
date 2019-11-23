@@ -41,7 +41,7 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
 
     Atot= A1+A2;
     Ab   =  A2;
-
+    disp('here 5');
     if configs.use_lap % Use 2nd dx dy, ie. constraint on (Ix)x
  
       w3=(abs(mx*out_x(:)).^2 + delta).^(p/2-1);
@@ -101,7 +101,7 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       %Atot=Atot+A13+A14;
       %Ab=Ab+A14;
     end
-
+    disp('here 6');
     if configs.use_cross %constraint on (Ix)xy
       w15=(abs(mcross*out_x(:)).^2 + delta).^(p/2-1);
       w16=(abs(mcross*mh*( I_x(:)-out_x(:) )).^2 + delta).^(p/2-1);
@@ -112,7 +112,7 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       Atot=Atot+A15+A16;
       Ab=Ab+A16;
     end
-
+    disp('here 7');
     out_x = Atot\(Ab*I_x(:));
     res = I_x(:)-out_x;
 
