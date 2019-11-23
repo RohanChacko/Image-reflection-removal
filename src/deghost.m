@@ -11,6 +11,7 @@ addpath('lbfgsb/lbfgsb3.0_mex1.2');
     load('waterfall.mat');
     % Estimate ghosting kernel, including spatial shift configs.dx, dy 
     % and the attenuation factor configs.c.
+
     [configs.dx configs.dy configs.c] = kernel_est(I_in);
 
     % Set up padding size. 
