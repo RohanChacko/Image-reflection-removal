@@ -5,8 +5,9 @@ function [dx dy c ] =  kernel_est(I_in)
   resp = imfilter(I_in, Laplacian);
   auto_corr = xcorr2(resp, resp);
   bdry = 370; 
+  disp(size(auto_corr));
   auto_corr = auto_corr(bdry:end-bdry, bdry:end-bdry);
-  
+  disp(size(auto_corr));
   max_1 = ordfilt2(auto_corr, 25, true(5));
   max_2 = ordfilt2(auto_corr, 24, true(5));
 

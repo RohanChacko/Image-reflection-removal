@@ -5,10 +5,13 @@ addpath('epllcode');
 % Dependency on bounded-LBFGS Optimization package
 addpath('lbfgsb/lbfgsb3.0_mex1.2');   
 
-  if strcmp(test_case, 'waterfall')
+  % if strcmp(test_case, 'waterfall')
     % Read the input image from the linearized raw file.
     % apples.mat contains I_in. We will write it out to [0-255] for visualization.
-    load('waterfall.mat');
+    I_in = imresize(imread(test_case),[400 540]);
+    % I_in = imread(test_case);
+    I_in = im2double(I_in);
+    disp(size(I_in));
     % Estimate ghosting kernel, including spatial shift configs.dx, dy 
     % and the attenuation factor configs.c.
     [configs.dx configs.dy configs.c] = kernel_est(I_in);
@@ -16,13 +19,13 @@ addpath('lbfgsb/lbfgsb3.0_mex1.2');
     % Set up padding size. 
     %The padding size needs to be larger than the spatial shift.
     configs.padding = 40;
-  else                    % Check the environment by testing on synthetic data. 
+  % else                    % Check the environment by testing on synthetic data. 
     
-    [I_in configs] = simple([]);
-    dx = configs.dx;
-    dy = configs.dy;
-    c  = configs.c;
-  end
+  %   [I_in configs] = simple([]);
+  %   dx = configs.dx;
+  %   dy = configs.dy;
+  %   c  = configs.c;
+  % end
 
 [h w nc] = size(I_in);
 configs.h = h;
@@ -98,7 +101,7 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
   est_t = im2patches(I_t_i, psize);
   est_r = im2patches(I_r_i, psize);
 
-  niter = 25;
+  niter = 5;
   beta  = configs.beta_i;
 
   for i = 1 : niter

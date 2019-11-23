@@ -12,12 +12,10 @@ function [I_t I_r configs]=grad_irls(I_in, configs)
   configs.use_diagnoal=1;
   configs.use_lap2=1;
   configs.use_cross=0;
-  configs.niter=20; 
-  disp('here1');
+  % parameters changed
+  configs.niter=5; 
   mk = get_k(configs.h, configs.w, dx, dy, c);
-  disp('here2');
   mh = inv(mk);
-  disp('here3');
 
   mx = get_fx(configs.h, configs.w);
   my = get_fy(configs.h, configs.w);
