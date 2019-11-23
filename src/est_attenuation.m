@@ -1,6 +1,7 @@
 function c=est_attenuation(I, dx, dy)
   cns = corner(I);
-  hw=18;
+  % changed. making it 5 acc to paper
+  hw=5;
   m=[];
   score=zeros(size(cns,1),1); 
   attn=score*0;
@@ -10,8 +11,11 @@ function c=est_attenuation(I, dx, dy)
     p2 = get_patch(I, cns(i,1) + dx, cns(i,2) + dy, hw);
     if ~isempty(p1) && ~isempty(p2)
       m=[m;p1 p2;];
+      
+      % calculate variances of patch and patch + dk
       p1=p1(:); p2=p2(:);
       p1=p1-mean(p1); p2=p2-mean(p2);
+      
       score(i)=sum(p1.*p2)/sum(p1.^2).^0.5/sum(p2.^2).^0.5;
       attn(i)=(max(p2)-min(p2))/(max(p1)-min(p1));
       if (attn(i) <1) && ( attn(i) > 0)
@@ -20,7 +24,7 @@ function c=est_attenuation(I, dx, dy)
     end
   end
   c=sum(w.*attn)/sum(w);
- 
+end 
 
 function p=get_patch(I, x, y, hw)
   if (x>hw)&&(x<size(I,2)-hw)&&(y>hw)&&(y<size(I,1)-hw)

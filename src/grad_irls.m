@@ -12,8 +12,10 @@ function [I_t I_r configs]=grad_irls(I_in, configs)
   configs.use_diagnoal=1;
   configs.use_lap2=1;
   configs.use_cross=0;
-  % parameters changed
-  configs.niter=5; 
+
+  % Hyperparameter
+  configs.niter=5;
+  
   mk = get_k(configs.h, configs.w, dx, dy, c);
   mh = inv(mk);
 
@@ -33,7 +35,7 @@ function [I_t I_r configs]=grad_irls(I_in, configs)
 
   out_x=irls_grad(I_x, [], out_xi, mh, configs, mx, my,  mu, mv, mlap);
   outr_x = reshape(mh*(I_x(:)-out_x(:)), dims);
-   
+
   out_y=irls_grad(I_y, [], out_yi, mh, configs, mx, my, mu, mv, mlap);
   disp('here4');
   outr_y = reshape(mh*(I_y(:)-out_y(:)), dims);

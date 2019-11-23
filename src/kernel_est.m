@@ -1,29 +1,47 @@
-function [dx dy c ] =  kernel_est(I_in) 
+function [dx dy c] =  kernel_est(I_in)
+  % Estimate kernel parameters :
+  % 1. d_k : spatial shift vector
+  % 2. c_k : attenuation factor
 
+  % Converting image to grayscale
   I_in = rgb2gray(I_in);
-  Laplacian=[0 -1 0; -1 4 -1; 0 -1 0];
-  resp = imfilter(I_in, Laplacian);
-  auto_corr = xcorr2(resp, resp);
-  bdry = 370; 
-  disp(size(auto_corr));
-  auto_corr = auto_corr(bdry:end-bdry, bdry:end-bdry);
-  disp(size(auto_corr));
-  max_1 = ordfilt2(auto_corr, 25, true(5));
-  max_2 = ordfilt2(auto_corr, 24, true(5));
 
-  auto_corr(end/2 - 4 : end/2 + 4, end/2 - 4 : end/2+4)=0;
-  candidates = find((auto_corr == max_1) & ((max_1 - max_2)>70));
-  candidates_val = auto_corr(candidates);
+  OFFSET = 50;
+  laplacian_filter = [0 -1 0; -1  4 -1; 0 -1 0];
 
-  cur_max = 0;
-  dx = 0; 
-  dy = 0;
-  offset = size(auto_corr)/2 + 1;
-  for i = 1 : length(candidates)
-    if (candidates_val(i) > cur_max)  
-      [dy dx] = ind2sub(size(auto_corr), candidates(i)); 
-      dy = dy - offset(1);
-      dx = dx - offset(2);
-    end
-  end
-  c = est_attenuation(I_in, dx, dy);
+  % Applying laplacian on the image
+  lp_output = imfilter(I_in, laplacian_filter);
+  % Generaing autocorrelation map
+  auto_corr = xcorr2(lp_output);
+  [corr_x , corr_y] = size(auto_corr);
+  auto_corr = auto_corr(floor((corr_x+1)/2)-OFFSET:floor((corr_x+1)/2)+OFFSET, floor((corr_y+1)/2)-OFFSET:floor((corr_y+1)/2)+OFFSET);
+
+  % Extracting the first and second local maxima in each 5x5 neighborhood
+  f1 = @(x) max(x(:));
+  f_loc_max = nlfilter(auto_corr, [5 5], f1);
+  f2 = @(x) max(x(x~=max(x)));
+  s_loc_max = nlfilter(auto_corr, [5 5], f2);
+
+  % Removing local maxima within 4 pixels of origin for robust estimation
+  [size_x, size_y] = size(f_loc_max);
+  f_loc_max((size_x+1)/2 - 4: (size_x+1)/2 + 4, (size_y+1)/2 - 4: (size_y+1)/2 + 4) = 0;
+  s_loc_max((size_x+1)/2 - 4: (size_x+1)/2 + 4, (size_y+1)/2 - 4: (size_y+1)/2 + 4) = 0;
+
+  % Discard local maxima in neighborhoods where the first & second maxima
+  % are closer than a predefined threshold to remove local maxima
+  % caused due to locally flat or repetitive structures. Here threshold : 70
+
+  threshold = 70;
+  thresh_diff = f_loc_max - s_loc_max;
+  indx = find(thresh_diff < threshold);
+  f_loc_max(indx) = 0;
+
+  % Select the largest maxima from the local maximas as Ghosting distance
+  [global_maxima, dk] = max(f_loc_max(:));
+  [dk_y, dk_x] = ind2sub(size(f_loc_max), dk);
+
+  dy = floor((size_x)/2 + 1 - dk_y)
+  dx = floor((size_y)/2 + 1 - dk_x)
+
+  c = atten_est(I_in, dx, dy);
+end
