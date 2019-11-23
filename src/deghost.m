@@ -98,7 +98,7 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
   est_t = im2patches(I_t_i, psize);
   est_r = im2patches(I_r_i, psize);
 
-  niter = 5;
+  niter = 25;
   beta  = configs.beta_i;
 
   for i = 1 : niter
