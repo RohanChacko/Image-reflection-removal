@@ -1,19 +1,19 @@
 function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
 % Solve tx = argmin  |tx|_p + |mh (I_x - tx)|_p + high_order_terms (optional)
 % Unconstrained problem
-% Support high order priors, see code 
+% Support high order priors, see code
 
-% I_x   : input gradient, can be any direction 
+% I_x   : input gradient, can be any direction
 % tx    : ground truth transmission gradient, for evaluation.
 % out_xi: initial estimation
-% mh    : deconvolution kernel. mh*mk=delta. (mk=two pulse kernel) 
+% mh    : deconvolution kernel. mh*mk=delta. (mk=two pulse kernel)
 % Below are optinoal
 % mx,my : first  order constraint in horizotal/vertical direction
 % mu,mv : first  order constraint in \ / direction
-% mlap  : second order constraint by Laplacian  
+% mlap  : second order constraint by Laplacian
 
 
-  p=configs.p; 
+  p=configs.p;
   num_px=configs.num_px;
   out_x=out_xi;
 
@@ -39,11 +39,11 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
     A1 = spdiags(w1(:), 0, num_px, num_px);
     A2 = mh'*spdiags(w2(:), 0, num_px, num_px)*mh;
 
-    Atot= A1+A2;
-    Ab   =  A2;
-    disp('here 5');
+    Atot = A1+A2;
+    Ab =  A2;
+
     if configs.use_lap % Use 2nd dx dy, ie. constraint on (Ix)x
- 
+
       w3=(abs(mx*out_x(:)).^2 + delta).^(p/2-1);
       w4=(abs(my*out_x(:)).^2 + delta).^(p/2-1);
       w5=(abs(mx*mh*( I_x(:)-out_x(:) )).^2 + delta).^(p/2-1);
@@ -55,8 +55,8 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       A6 = my'*spdiagI(w6)*my;
       A7 = mh'*(A5+A6)*mh;
 
-      Atot=Atot+A3+A4+A7;
-      Ab=Ab+A7;
+      Atot = Atot + A3 + A4 + A7;
+      Ab = Ab + A7;
 
     end
 
@@ -72,8 +72,8 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       A11 = mv'*spdiagI(w11)*mv;
       A12 = mh'*(A10+A11)*mh;
 
-      Atot=Atot+A8+A9+A12;
-      Ab=Ab+A12;
+      Atot = Atot + A8 + A9 + A12;
+      Ab = Ab + A12;
     end
 
     if configs.use_lap2 % constraint on (Ix)xx
@@ -88,8 +88,8 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       A20 = my2'*spdiagI(w20)*my2;
       A21 = mh'*(A19+A20)*mh;
 
-      Atot=Atot+A17+A18+A21;
-      Ab=Ab+A21;
+      Atot = Atot + A17 + A18 + A21;
+      Ab = Ab + A21;
 
 
       %w13=(abs(mlap*out_x(:)).^2 + delta).^(p/2-1);
@@ -101,22 +101,20 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       %Atot=Atot+A13+A14;
       %Ab=Ab+A14;
     end
-    disp('here 6');
+
     if configs.use_cross %constraint on (Ix)xy
       w15=(abs(mcross*out_x(:)).^2 + delta).^(p/2-1);
-      w16=(abs(mcross*mh*( I_x(:)-out_x(:) )).^2 + delta).^(p/2-1);
-      
+      w16=(abs(mcross*mh*( I_x(:) - out_x(:) )).^2 + delta).^(p/2-1);
+
       A15 = mcross'*spdiagI(w15)*mcross;
       A16 = mh'*mcross'*spdiagI(w16)*mcross*mh;
 
-      Atot=Atot+A15+A16;
-      Ab=Ab+A16;
+      Atot = Atot + A15 + A16;
+      Ab = Ab + A16;
     end
-    disp('here 7');
+
     out_x = Atot\(Ab*I_x(:));
-    res = I_x(:)-out_x;
+    res = I_x(:) - out_x;
 
   end
   out_x = reshape(out_x, configs.dims);
-
-

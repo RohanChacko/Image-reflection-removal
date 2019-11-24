@@ -10,5 +10,5 @@ I_r = I_r - min(I_r_retrieve(:));
 
 % Match the global information of the original image with that of the
 % transmitted image
-sig = sqrt( sum( (I_in - mean(I_in) ).^2 ) / sum( (I-t-mean(I_t(:)) ).^2 ) );
+sig = sqrt( sum( (I_in - mean(I_in) ).^2 ) / sum( (I_t-mean(I_t(:)) ).^2 ) );
 I_t = sig * ( I_t - mean(I_t(:)) ) + mean( I_in(:) );

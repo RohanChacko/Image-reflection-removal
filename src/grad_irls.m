@@ -15,7 +15,7 @@ function [I_t I_r configs]=grad_irls(I_in, configs)
 
   % Hyperparameter
   configs.niter=5;
-  
+
   mk = get_k(configs.h, configs.w, dx, dy, c);
   mh = inv(mk);
 
@@ -27,18 +27,18 @@ function [I_t I_r configs]=grad_irls(I_in, configs)
 
   mlap = get_lap(configs.h, configs.w);
 
-  k=configs.ch;
-  I_x=imfilter(I_in, [-1 1]);
-  I_y=imfilter(I_in, [-1; 1]);
+  k = configs.ch;
+  I_x = imfilter(I_in, [-1 1]);
+  I_y = imfilter(I_in, [-1; 1]);
 
-  out_xi=I_x/2; out_yi=I_y/2;
+  out_xi = I_x/2;
+  out_yi = I_y/2;
 
-  out_x=irls_grad(I_x, [], out_xi, mh, configs, mx, my,  mu, mv, mlap);
+  out_x = irls_grad(I_x, [], out_xi, mh, configs, mx, my,  mu, mv, mlap);
   outr_x = reshape(mh*(I_x(:)-out_x(:)), dims);
 
-  out_y=irls_grad(I_y, [], out_yi, mh, configs, mx, my, mu, mv, mlap);
-  disp('here4');
+  out_y = irls_grad(I_y, [], out_yi, mh, configs, mx, my, mu, mv, mlap);
   outr_y = reshape(mh*(I_y(:)-out_y(:)), dims);
 
-  I_t=Integration2D(out_x, out_y, I_in);
-  I_r=Integration2D(outr_x, outr_y, I_in);
+  I_t = Integration2D(out_x, out_y, I_in);
+  I_r = Integration2D(outr_x, outr_y, I_in);
