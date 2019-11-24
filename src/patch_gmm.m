@@ -30,8 +30,7 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
 
   num_patches = (h - psize + 1) * (w - psize + 1);
 
-  mask = merge_two_patches(ones(psize^2, num_patches),...
-              ones(psize^2, num_patches), h, w, psize);
+  mask = merge_two_patches(ones(psize^2, num_patches),ones(psize^2, num_patches), h, w, psize);
 
   % Use non-negative constraint
   configs.non_negative = true;
@@ -41,10 +40,8 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
   excludeList=[];
 
   % Initialize
+  % IRLS: Iteratively reweighted least squares optimization method
   [I_t_i I_r_i ] = grad_irls(I_in, configs);
-
-  % faster option, but results are not as good.
-  % [I_t_i I_r_i ] = grad_lasso(I_in, configs);
 
 
   % Apply patch gmm with the initial result.
@@ -66,7 +63,7 @@ function [I_t I_r ] = patch_gmm(I_in, configs)
 
     sum_zi_2 = norm(est_t(:))^2 + norm(est_r(:))^2;
     fcn = @(x)( lambda * norm(A*x - I_in(:))^2 + ...
-        beta*( sum(x.*mask.*x - 2 * x.* sum_piT_zi(:)) + sum_zi_2));
+        beta*( sum(x  .*mask.*x - 2 * x.* sum_piT_zi(:)) + sum_zi_2));
 
     f_handle = @(x)(lambda * transpose(A) * (A*x) + beta * (mask.*x));
     grad = @(x)(2*(f_handle(x) - z));

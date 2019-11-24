@@ -91,15 +91,6 @@ function out_x=irls_grad(I_x, tx, out_xi, mh, configs, mx, my,  mu, mv, mlap)
       Atot = Atot + A17 + A18 + A21;
       Ab = Ab + A21;
 
-
-      %w13=(abs(mlap*out_x(:)).^2 + delta).^(p/2-1);
-      %w14=(abs(mlap*mh*( I_x(:)-out_x(:) )).^2 + delta).^(p/2-1);
-
-      %A13 = mlap'*spdiagI(w13)*mlap;
-      %A14 = mh'*mlap'*spdiagI(w14)*mlap*mh;
-
-      %Atot=Atot+A13+A14;
-      %Ab=Ab+A14;
     end
 
     if configs.use_cross %constraint on (Ix)xy
