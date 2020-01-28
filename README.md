@@ -3,7 +3,7 @@
 ### Digital Image Processing Project | Monsoon 2019
 
 #### Team Details:
-- Members : [Rohan Chacko](https://github.com/RohanChacko) and (Meher Shashwat Nigam)[https://github.com/ShashwatNigam99]
+- Members : [Rohan Chacko](https://github.com/RohanChacko) and [Meher Shashwat Nigam](https://github.com/ShashwatNigam99)
 - Paper implemented : [PDF](http://people.csail.mit.edu/yichangshih/mywebsite/reflection.pdf)
 
 ## Directory structure
