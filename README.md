@@ -1,10 +1,10 @@
-# Image reflection removal using ghosting cues
+# Image reflection removal using ghosting cues, CVPR 2015
 
 ### Digital Image Processing Project | Monsoon 2019
 
 #### Team Details:
 - Members : [Rohan Chacko](https://github.com/RohanChacko) and [Meher Shashwat Nigam](https://github.com/ShashwatNigam99)
-- Paper implemented : [Image Reflection Removal](http://people.csail.mit.edu/yichangshih/mywebsite/reflection.pdf)
+- Paper implemented : [Image Reflection Removal using ghosting cues, **CVPR 2015**](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Shih_Reflection_Removal_Using_2015_CVPR_paper.pdf)
 
 ## Directory structure
 ```
