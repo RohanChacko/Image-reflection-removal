@@ -1,4 +1,4 @@
-# Image reflection removal using ghosting cue
+# Image reflection removal using ghosting cues
 
 ## Overview
 ![Overview](thumbnail.png)
